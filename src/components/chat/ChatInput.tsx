@@ -7,9 +7,10 @@ interface ChatInputProps {
   message: string;
   setMessage: (message: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  isStreaming?: boolean;
 }
 
-export function ChatInput({ message, setMessage, onSubmit }: ChatInputProps) {
+export function ChatInput({ message, setMessage, onSubmit, isStreaming }: ChatInputProps) {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
@@ -24,9 +25,10 @@ export function ChatInput({ message, setMessage, onSubmit }: ChatInputProps) {
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="궁금한 걸 입력해주세요..."
-            className="w-full h-[87px] bg-transparent px-[10px] py-[15px] text-white font-['Pretendard:Regular',sans-serif] text-[15px] resize-none focus:outline-none placeholder:text-white"
+            placeholder={isStreaming ? "AI가 응답 중입니다..." : "궁금한 걸 입력해주세요..."}
+            className="w-full h-[87px] bg-transparent px-[10px] py-[15px] text-white font-['Pretendard:Regular',sans-serif] text-[15px] resize-none focus:outline-none placeholder:text-white disabled:opacity-50"
             onKeyDown={handleKeyDown}
+            disabled={isStreaming}
           />
 
           {/* Attachment button */}
@@ -51,8 +53,8 @@ export function ChatInput({ message, setMessage, onSubmit }: ChatInputProps) {
           {/* Send button */}
           <button
             type="submit"
-            className="absolute right-[8px] bottom-[15px] size-[31px] hover:opacity-80 transition-opacity"
-            disabled={!message.trim()}
+            className="absolute right-[8px] bottom-[15px] size-[31px] hover:opacity-80 transition-opacity disabled:opacity-50"
+            disabled={!message.trim() || isStreaming}
           >
             <div className="absolute inset-[-3.333%]">
               <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 32 32">

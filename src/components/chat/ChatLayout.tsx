@@ -6,12 +6,13 @@ import { ModelSelector } from "./ModelSelector";
 import { ChatInput } from "./ChatInput";
 import { WelcomeMessage } from "./WelcomeMessage";
 import { SuggestedPrompts } from "./SuggestedPrompts";
+import { MessageList } from "./MessageList";
 import { useChat } from "@/hooks/useChat";
 import svgPathsMain from "@/assets/svgs/main";
 
 export function ChatLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { message, setMessage, handleSendMessage, handleSubmit } = useChat();
+  const { messages, message, setMessage, handleSendMessage, handleSubmit, isStreaming } = useChat();
 
   return (
     <div className="flex h-screen w-full bg-zinc-950 overflow-hidden">
@@ -66,14 +67,19 @@ export function ChatLayout() {
           </button>
         </div>
 
-        {/* Welcome Message */}
-        <WelcomeMessage />
+        {/* Welcome Message and Suggested Prompts - only show when no messages */}
+        {messages.length === 0 && (
+          <>
+            <WelcomeMessage />
+            <SuggestedPrompts onPromptClick={handleSendMessage} />
+          </>
+        )}
 
-        {/* Suggested Prompts */}
-        <SuggestedPrompts onPromptClick={handleSendMessage} />
+        {/* Message List - show when there are messages */}
+        <MessageList messages={messages} isStreaming={isStreaming} />
 
         {/* Chat Input */}
-        <ChatInput message={message} setMessage={setMessage} onSubmit={handleSubmit} />
+        <ChatInput message={message} setMessage={setMessage} onSubmit={handleSubmit} isStreaming={isStreaming} />
       </div>
     </div>
   );
