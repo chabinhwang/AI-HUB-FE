@@ -7,11 +7,13 @@ import { ChatInput } from "./ChatInput";
 import { WelcomeMessage } from "./WelcomeMessage";
 import { SuggestedPrompts } from "./SuggestedPrompts";
 import { MessageList } from "./MessageList";
+import { Dashboard } from "../dashboard/Dashboard";
 import { useChat } from "@/hooks/useChat";
 import svgPathsMain from "@/assets/svgs/main";
 
 export function ChatLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
   const {
     messages,
     message,
@@ -24,9 +26,21 @@ export function ChatLayout() {
     removePastedImage,
   } = useChat();
 
+  // Dashboard를 보여줄 때
+  if (showDashboard) {
+    return <Dashboard onClose={() => setShowDashboard(false)} />;
+  }
+
   return (
     <div className="flex h-screen w-full bg-zinc-950 overflow-hidden">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        onDashboardClick={() => {
+          setShowDashboard(true);
+          setSidebarOpen(false);
+        }}
+      />
 
       {/* Main Content */}
       <div className="flex-1 relative w-full h-full overflow-hidden">

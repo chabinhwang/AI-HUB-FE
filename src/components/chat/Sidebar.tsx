@@ -8,9 +8,10 @@ import { ChatHistoryItem } from "@/types/chat";
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  onDashboardClick?: () => void;
 }
 
-export function Sidebar({ isOpen, onClose }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, onDashboardClick }: SidebarProps) {
   return (
     <>
       {/* Sidebar Overlay */}
@@ -90,7 +91,10 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
         </div>
 
         {/* AI Usage Section */}
-        <div className="h-[57px] border-b border-[#2c2e30] relative">
+        <button
+          onClick={onDashboardClick}
+          className="h-[57px] border-b border-[#2c2e30] relative w-full hover:bg-[#2c2e30] transition-colors"
+        >
           <p className="absolute font-['Pretendard:Regular',sans-serif] leading-[normal] left-[calc(12.5%+2.75px)] not-italic text-[16px] text-neutral-100 text-nowrap top-[19px] whitespace-pre">
             이번 달 AI 사용량
           </p>
@@ -118,7 +122,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
               </defs>
             </svg>
           </div>
-        </div>
+        </button>
 
         {/* Recent Chat Header */}
         <div className="px-4 py-3">
