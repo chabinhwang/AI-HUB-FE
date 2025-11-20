@@ -84,7 +84,7 @@ export function ChatInput({
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onPaste={handlePaste}
-            placeholder={isStreaming ? "AI가 응답 중입니다..." : "궁금한 걸 입력해주세요... (Ctrl+V로 이미지 붙여넣기)"}
+            placeholder={isStreaming ? "AI가 응답 중입니다..." : "궁금한 걸 입력해주세요..."}
             className="w-full h-[87px] bg-transparent px-[10px] py-[15px] text-white font-['Pretendard:Regular',sans-serif] text-[15px] resize-none focus:outline-none placeholder:text-white disabled:opacity-50"
             onKeyDown={handleKeyDown}
             disabled={isStreaming}
