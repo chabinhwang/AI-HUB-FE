@@ -55,25 +55,30 @@ export function ChatLayout() {
         <div className="absolute bg-zinc-950 inset-0" />
 
         {/* Top Navigation */}
-        <div className="absolute top-0 left-0 right-0 h-[75px] flex items-center justify-between px-[21px] z-30">
-          {/* Menu Button */}
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="h-[35px] w-[48px] hover:opacity-80 transition-opacity"
-          >
-            <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 35">
-              <g>
-                <path d={svgPathsMain.p3902ef00} stroke="#444648" />
-                <path d={svgPathsMain.p38192d70} stroke="#929292" strokeWidth="2" />
-              </g>
-            </svg>
-          </button>
+        <div className="absolute top-0 left-0 right-0 h-[75px] flex items-center px-[21px] z-30">
+          {/* Left Section: Menu Button and Model Selector */}
+          <div className="flex  gap-[36px]">
+            {/* Menu Button */}
+            <button
+              onClick={() => {
+                setSidebarOpen(!sidebarOpen);
+              }}
+              className="h-[35px] w-[48px] hover:opacity-80 transition-opacity"
+            >
+              <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 48 35">
+                <g>
+                  <path d={svgPathsMain.p3902ef00} stroke="#444648" />
+                  <path d={svgPathsMain.p38192d70} stroke="#929292" strokeWidth="2" />
+                </g>
+              </svg>
+            </button>
 
-          {/* Model Selector */}
-          <ModelSelector />
+            {/* Model Selector */}
+            <ModelSelector />
+          </div>
 
           {/* New Chat Button */}
-          <button className="h-[35px] rounded-[5px] px-4 border border-[#ff983f] flex items-center gap-2 hover:bg-[#ff983f]/10 transition-colors ml-4">
+          <button className="h-[35px] rounded-[5px] px-4 border border-[#ff983f] flex items-center gap-2 hover:bg-[#ff983f]/10 transition-colors ml-auto">
             <div className="size-[11px]">
               <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 13 13">
                 <path d="M6.5 1L6.5 12M12 6.5L1 6.5" stroke="url(#paint0_linear_new_chat)" strokeLinecap="round" strokeWidth="2" />

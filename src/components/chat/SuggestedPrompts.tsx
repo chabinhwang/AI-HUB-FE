@@ -9,7 +9,7 @@ interface SuggestedPromptsProps {
 
 export function SuggestedPrompts({ onPromptClick }: SuggestedPromptsProps) {
   return (
-    <div className="absolute left-[21px] right-[21px] top-[718px] flex flex-col gap-[17px]">
+    <div className="absolute left-[21px] right-[21px] bottom-[14rem] flex flex-col gap-[17px]">
       {SUGGESTED_PROMPTS.map((prompt, index) => (
         <button
           key={index}

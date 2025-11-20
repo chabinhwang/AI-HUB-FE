@@ -15,26 +15,38 @@ export function ModelSelector() {
 
   return (
     <div className="flex-1 flex justify-center">
-      <div className="relative" ref={dropdownRef}>
+      <div className="flex items-center relative" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="h-[35px] rounded-[5px] min-w-[140px] px-3 border border-[#444648] flex items-center justify-between gap-2 hover:border-[#666] transition-colors"
+          className="h-[35px] rounded-[5px] min-w-[140px] px-3 border border-[#444648] flex items-center! justify-between gap-2 hover:border-[#666] transition-colors"
         >
           <p className="font-['Pretendard:Regular',sans-serif] text-[#e0e0e0] text-[15px] truncate">
             {selectedModel.name}
           </p>
-          <div className="h-[17px] w-[13px] flex-shrink-0">
-            <div className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>
-              <svg className="block w-[10px] h-[6px]" fill="none" viewBox="0 0 12 7">
-                <path d={svgPathsModel.p275eec80} stroke="#F5F5F5" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+          <div className="h-[17px] w-[13px] flex-shrink-0 relative flex items-center justify-center">
+            <div
+              className={`transition-transform ${isOpen ? "rotate-180" : ""}`}
+            >
+              <svg
+                className="block w-[10px] h-[6px]"
+                fill="none"
+                viewBox="0 0 12 7"
+              >
+                <path
+                  d={svgPathsModel.p275eec80}
+                  stroke="#F5F5F5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                />
               </svg>
             </div>
           </div>
         </button>
 
         {isOpen && (
-          <div className="absolute top-[40px] left-1/2 -translate-x-1/2 bg-zinc-950 rounded-[8px] border border-zinc-800 overflow-hidden z-50 shadow-lg min-w-[320px]">
-            <div className="flex flex-col gap-2 p-3">
+          <div className="absolute top-[2.5rem] left-0 bg-zinc-950 rounded-[8px] border border-zinc-800 z-50 shadow-lg w-[calc(100vw-4rem)] max-w-[30rem] p-3">
+            <div className="flex flex-col gap-2">
               {AI_MODELS.map((model) => (
                 <button
                   key={model.id}
@@ -42,8 +54,10 @@ export function ModelSelector() {
                     setSelectedModel(model);
                     setIsOpen(false);
                   }}
-                  className={`bg-zinc-900/50 min-h-[70px] text-left px-4 py-3 hover:bg-zinc-800 transition-colors rounded-md ${
-                    selectedModel.id === model.id ? "ring-2 ring-[#ff983f] bg-zinc-800" : ""
+                  className={`bg-zinc-900/50 min-h-[7rem] w-full text-left pl-[2.7rem] py-[1.4rem] hover:bg-zinc-800 transition-colors rounded-md ${
+                    selectedModel.id === model.id
+                      ? "ring-2 ring-[#ff983f] bg-zinc-800 relative z-10"
+                      : ""
                   }`}
                 >
                   <p className="font-['Pretendard:SemiBold',sans-serif] text-[16px] text-neutral-50 mb-1">

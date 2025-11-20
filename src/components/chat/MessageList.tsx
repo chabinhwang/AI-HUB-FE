@@ -46,9 +46,9 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
             }`}
           >
             <div
-              className={`max-w-[80%] rounded-[12px] px-4 py-3 relative group ${
+              className={`max-w-[100%] rounded-[12px]  py-3 relative group ${
                 message.role === "user"
-                  ? "bg-[#ff983f] text-white"
+                  ? "bg-[#ff983f] text-white px-3"
                   : "bg-transparent text-white"
               }`}
             >
@@ -85,18 +85,14 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
                       />
                     </svg>
                   ) : (
-                    <img
-                      src="/copy-left.svg"
-                      alt="복사"
-                      className="w-5 h-5"
-                    />
+                    <img src="/copy-left.svg" alt="복사" className="w-5 h-5" />
                   )}
                 </button>
               )}
 
               {/* 메시지 내용 */}
               {message.content && (
-                <div className="font-['Pretendard:Regular',sans-serif] text-[15px] break-words markdown-content">
+                <div className="font-['Pretendard:Regular',sans-serif] !text-[1.6rem] break-words markdown-content">
                   {message.role === "assistant" ? (
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
@@ -108,13 +104,13 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
                           const isInline = !match;
                           return isInline ? (
                             <code
-                              className="bg-[rgba(255,255,255,0.1)] px-1.5 py-0.5 rounded text-[#ff983f]"
+                              className="bg-[rgba(255,255,255,0.1)] px-1.5 py-0.5 rounded text-[#ff983f] !text-[1.6rem]"
                               {...props}
                             >
                               {children}
                             </code>
                           ) : (
-                            <code className={className} {...props}>
+                            <code className={`${className} !text-[1.6rem]`} {...props}>
                               {children}
                             </code>
                           );
@@ -127,7 +123,7 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
                         // 링크 스타일링
                         a: ({ children, ...props }) => (
                           <a
-                            className="text-[#ff983f] hover:underline"
+                            className="text-[#ff983f] hover:underline !text-[1.6rem]"
                             target="_blank"
                             rel="noopener noreferrer"
                             {...props}
@@ -137,52 +133,55 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
                         ),
                         // 리스트 스타일링
                         ul: ({ children }) => (
-                          <ul className="list-disc list-inside my-2 space-y-1">
+                          <ul className="list-disc list-inside my-2 space-y-1 !text-[1.6rem]">
                             {children}
                           </ul>
                         ),
                         ol: ({ children }) => (
-                          <ol className="list-decimal list-inside my-2 space-y-1">
+                          <ol className="list-decimal list-inside my-2 space-y-1 !text-[1.6rem]">
                             {children}
                           </ol>
                         ),
+                        li: ({ children }) => (
+                          <li className="!text-[1.6rem]">{children}</li>
+                        ),
                         // 인용구 스타일링
                         blockquote: ({ children }) => (
-                          <blockquote className="border-l-4 border-[#ff983f] pl-4 my-2 italic opacity-80">
+                          <blockquote className="border-l-4 border-[#ff983f] pl-4 my-2 italic opacity-80 !text-[1.6rem]">
                             {children}
                           </blockquote>
                         ),
                         // 제목 스타일링
                         h1: ({ children }) => (
-                          <h1 className="text-2xl font-bold mt-4 mb-2">
+                          <h1 className="!text-[2.4rem] font-bold mt-4 mb-2">
                             {children}
                           </h1>
                         ),
                         h2: ({ children }) => (
-                          <h2 className="text-xl font-bold mt-3 mb-2">
+                          <h2 className="!text-[2rem] font-bold mt-3 mb-2">
                             {children}
                           </h2>
                         ),
                         h3: ({ children }) => (
-                          <h3 className="text-lg font-bold mt-2 mb-1">
+                          <h3 className="!text-[1.8rem] font-bold mt-2 mb-1">
                             {children}
                           </h3>
                         ),
                         // 테이블 스타일링
                         table: ({ children }) => (
                           <div className="overflow-x-auto my-2">
-                            <table className="border-collapse border border-[#444648] w-full">
+                            <table className="border-collapse border border-[#444648] w-full !text-[1.6rem]">
                               {children}
                             </table>
                           </div>
                         ),
                         th: ({ children }) => (
-                          <th className="border border-[#444648] px-3 py-2 bg-[rgba(255,255,255,0.05)]">
+                          <th className="border border-[#444648] px-3 py-2 bg-[rgba(255,255,255,0.05)] !text-[1.6rem]">
                             {children}
                           </th>
                         ),
                         td: ({ children }) => (
-                          <td className="border border-[#444648] px-3 py-2">
+                          <td className="border border-[#444648] px-3 py-2 !text-[1.6rem]">
                             {children}
                           </td>
                         ),
@@ -191,13 +190,15 @@ export function MessageList({ messages, isStreaming }: MessageListProps) {
                           <hr className="my-4 border-t border-[#444648]" />
                         ),
                         // 단락 스타일링
-                        p: ({ children }) => <p className="my-2">{children}</p>,
+                        p: ({ children }) => <p className="my-2 !text-[1.6rem]">{children}</p>,
                       }}
                     >
                       {message.content}
                     </ReactMarkdown>
                   ) : (
-                    <span className="whitespace-pre-wrap">{message.content}</span>
+                    <span className="whitespace-pre-wrap">
+                      {message.content}
+                    </span>
                   )}
                   {message.role === "assistant" &&
                     isStreaming &&
