@@ -4,8 +4,9 @@ import {
   ApiMessage,
   SendMessageRequest,
   SSECompletedData,
+  MessageDetailResponse,
 } from "@/types/message";
-import { ApiErrorDetail } from "@/types/upload";
+import { ApiErrorDetail, ApiResponse } from "@/types/upload";
 
 // API 베이스 URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
@@ -296,4 +297,55 @@ export function convertToUIMessages(apiMessages: ApiMessage[]) {
       modelId: msg.modelId,
     },
   }));
+}
+
+/**
+ * 특정 메시지의 상세 정보 조회
+ * 쿠키 기반 인증 사용
+ */
+export async function getMessageDetail(
+  messageId: string
+): Promise<MessageDetailResponse> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/messages/${messageId}`,
+      {
+        method: "GET",
+        credentials: "include", // 쿠키 포함
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data: MessageDetailResponse | ApiResponse<ApiErrorDetail> =
+      await response.json();
+
+    // 성공 응답
+    if (response.ok && data.success) {
+      return data as MessageDetailResponse;
+    }
+
+    // 에러 응답
+    const errorDetail = data.detail as ApiErrorDetail;
+
+    // 특정 에러 코드별 처리
+    switch (errorDetail.code) {
+      case "MESSAGE_NOT_FOUND":
+        throw new Error("메시지를 찾을 수 없습니다.");
+      case "FORBIDDEN":
+        throw new Error("접근 권한이 없습니다.");
+      case "INVALID_TOKEN":
+        throw new Error("인증이 필요합니다.");
+      default:
+        throw new Error(
+          errorDetail.message || "메시지 조회에 실패했습니다."
+        );
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("메시지 조회 중 오류가 발생했습니다.");
+  }
 }

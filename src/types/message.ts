@@ -84,3 +84,19 @@ export function createSortParam(
 ): string {
   return `${field},${direction}`;
 }
+
+// 메시지 상세 조회 응답 타입
+export interface MessageDetail {
+  messageId: string; // UUID v7
+  roomId: string; // UUID v7
+  role: "user" | "assistant";
+  content: string;
+  fileUrl: string | null; // 첨부 파일 URL (없으면 null)
+  tokenCount: number;
+  coinCount: number;
+  modelId: number;
+  createdAt: string; // ISO 8601
+}
+
+// 메시지 상세 조회 응답
+export type MessageDetailResponse = ApiResponse<MessageDetail>;
