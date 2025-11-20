@@ -11,6 +11,46 @@ export interface ApiMessage {
   createdAt: string; // ISO 8601
 }
 
+// 메시지 전송 요청 타입
+export interface SendMessageRequest {
+  message: string; // 최대 4,000자
+  modelId: number; // 채팅방에 허용된 모델
+  fileId?: string; // 업로드 파일 ID (선택)
+  previousResponseId?: string; // 이전 AI 응답 ID (선택)
+}
+
+// SSE 이벤트 타입
+export type SSEEventType = "started" | "delta" | "completed";
+
+// SSE started 이벤트
+export interface SSEStartedEvent {
+  event: "started";
+  data: string; // "Message sending started"
+}
+
+// SSE delta 이벤트
+export interface SSEDeltaEvent {
+  event: "delta";
+  data: string; // 증분 텍스트
+}
+
+// SSE completed 이벤트 데이터
+export interface SSECompletedData {
+  aiResponseId: string;
+  inputTokens: number;
+  userMessageId: string;
+  outputTokens: number;
+}
+
+// SSE completed 이벤트
+export interface SSECompletedEvent {
+  event: "completed";
+  data: SSECompletedData;
+}
+
+// SSE 이벤트 유니온 타입
+export type SSEEvent = SSEStartedEvent | SSEDeltaEvent | SSECompletedEvent;
+
 // 페이지네이션 응답 타입
 export interface PageResponse<T> {
   content: T[];
