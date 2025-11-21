@@ -453,6 +453,26 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 유효성 검사 포함 (길이, 공백, 이메일 형식)
   - 에러 발생 시 throw
 
+### 5-6. 결제 내역 조회
+
+- **엔드포인트**: `GET /api/payments`
+- **타입**: `src/types/payment.ts` - `Payment`, `PaymentsPageResponse`, `PaymentStatus`
+- **API**: `src/lib/api/payment.ts` - `getPayments()`
+- **훅**: `src/hooks/usePayments.ts` - `usePayments()`
+- **인증**: 필수 (쿠키 기반)
+- **쿼리 파라미터**:
+  - `page` (기본값: 0)
+  - `size` (기본값: 20, 1~100)
+  - `status` (선택: pending, completed, failed, cancelled)
+- **응답 필드**:
+  - content[] (paymentId, transactionId, paymentMethod, amountKrw, coinAmount, bonusCoin, status, createdAt, completedAt)
+  - totalElements, totalPages, size, number
+- **특징**:
+  - 페이지네이션 지원
+  - 결제 상태별 필터링 가능
+  - 동적 페이지/상태 조회 가능 (fetchPayments(page, status))
+  - autoFetch 옵션 지원
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
