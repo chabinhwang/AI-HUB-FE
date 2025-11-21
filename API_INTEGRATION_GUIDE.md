@@ -354,7 +354,24 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 이미지/문서만 허용
   - 파일 유효성 검사 포함
 
-### 5. 메시지 목록 조회 (페이지네이션)
+### 5. 사용자 통계 요약
+
+- **엔드포인트**: `GET /api/v1/dashboard/stats`
+- **타입**: `src/types/dashboard.ts` - `DashboardStats`, `MostUsedModel`
+- **API**: `src/lib/api/dashboard.ts` - `getDashboardStats()`
+- **훅**: `src/hooks/useDashboardStats.ts` - `useDashboardStats()`
+- **인증**: 필수 (쿠키 기반)
+- **응답 필드**:
+  - totalCoinPurchased, totalCoinUsed, currentBalance
+  - totalMessages, totalChatRooms
+  - mostUsedModel (modelId, modelName, displayName, usagePercentage)
+  - last30DaysUsage, memberSince
+- **특징**:
+  - 사용자별 통계 정보 제공
+  - autoFetch 옵션 지원
+  - 에러 콜백 지원
+
+### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
 - **타입**: `src/types/message.ts` - `MessagesPageResponse`
@@ -367,7 +384,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `size` (기본값: 50, 1~200)
   - `sort` (기본값: "createdAt,asc")
 
-### 6. 메시지 전송 및 AI 응답 (SSE)
+### 7. 메시지 전송 및 AI 응답 (SSE)
 
 - **엔드포인트**: `POST /api/v1/messages/send/{roomId}`
 - **타입**: `src/types/message.ts` - `SendMessageRequest`, `SSECompletedData`
@@ -384,7 +401,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `fileId` (선택)
   - `previousResponseId` (선택)
 
-### 7. 메시지 상세 조회
+### 8. 메시지 상세 조회
 
 - **엔드포인트**: `GET /api/v1/messages/{messageId}`
 - **타입**: `src/types/message.ts` - `MessageDetail`
@@ -419,6 +436,7 @@ SSE 파싱 로직은 `src/lib/api/message.ts`의 `sendMessageWithStreaming()`에
 ### 공통 에러 코드
 
 - `VALIDATION_ERROR`: 입력값 검증 실패
+- `AUTHENTICATION_FAILED`: 인증 실패
 - `INVALID_TOKEN`: 인증 실패
 - `FORBIDDEN`: 권한 없음
 - `ROOM_NOT_FOUND`: 채팅방 없음
