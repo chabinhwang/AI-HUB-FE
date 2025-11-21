@@ -303,6 +303,31 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 등록 후 자동으로 목록 새로고침
   - 유효성 검사 포함
 
+### 3-3. [관리자] AI 모델 수정
+
+- **엔드포인트**: `PUT /api/v1/admin/models/{modelId}`
+- **타입**: `src/types/model.ts` - `UpdateModelRequest`, `AIModelDetail`
+- **API**: `src/lib/api/model.ts` - `updateModel()`
+- **훅**: `src/hooks/useModelDetail.ts` - `useModelDetail().updateModelInfo()`
+- **인증**: 관리자 권한 (쿠키 기반)
+- **경로 변수**:
+  - `modelId` (integer)
+- **요청 필드** (모두 선택):
+  - `displayName` (선택, 최대 30자)
+  - `displayExplain` (선택, 최대 200자)
+  - `inputPricePer1k` (선택, 0 이상)
+  - `outputPricePer1k` (선택, 0 이상)
+  - `isActive` (선택)
+- **응답 필드**:
+  - modelId, modelName, displayName, displayExplain
+  - inputPricePer1k, outputPricePer1k
+  - isActive, createdAt, updatedAt
+- **특징**:
+  - 관리자 권한 필수
+  - 수정 후 자동으로 상태 업데이트
+  - 유효성 검사 포함
+  - 모든 필드 선택적 (부분 수정 가능)
+
 ### 4. 파일 업로드
 
 - **엔드포인트**: `POST /api/v1/messages/files/upload`

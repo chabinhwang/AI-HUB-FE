@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
-import { getModelDetail } from "@/lib/api/model";
-import { AIModelDetail } from "@/types/model";
+import { getModelDetail, updateModel } from "@/lib/api/model";
+import { AIModelDetail, UpdateModelRequest } from "@/types/model";
 
 interface UseModelDetailOptions {
   modelId: number;
@@ -43,6 +43,34 @@ export function useModelDetail(options: UseModelDetailOptions) {
     await fetchModelDetail();
   }, [fetchModelDetail]);
 
+  // [관리자] AI 모델 수정
+  const updateModelInfo = useCallback(
+    async (request: UpdateModelRequest) => {
+      if (!modelId || modelId <= 0) {
+        const error = new Error("유효한 모델 ID가 필요합니다.");
+        setError(error);
+        throw error;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await updateModel(modelId, request);
+        setModelDetail(response.detail);
+        return response.detail;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error("수정 실패");
+        setError(error);
+        onError?.(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [modelId, onError]
+  );
+
   // 초기 로드
   useEffect(() => {
     if (autoFetch && modelId > 0) {
@@ -56,5 +84,6 @@ export function useModelDetail(options: UseModelDetailOptions) {
     error,
     fetchModelDetail,
     refresh,
+    updateModelInfo,
   };
 }

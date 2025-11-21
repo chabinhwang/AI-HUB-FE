@@ -35,3 +35,12 @@ export interface CreateModelRequest {
   outputPricePer1k: number; // 출력 1k 토큰당 USD 가격 (필수, 0 이상)
   isActive: boolean; // 활성화 여부 (필수)
 }
+
+// [관리자] AI 모델 수정 요청
+export interface UpdateModelRequest {
+  displayName?: string; // 사용자 표시 이름 (선택, 최대 30자)
+  displayExplain?: string; // 모델 설명 (선택, 최대 200자)
+  inputPricePer1k?: number; // 입력 1k 토큰당 USD 가격 (선택, 0 이상)
+  outputPricePer1k?: number; // 출력 1k 토큰당 USD 가격 (선택, 0 이상)
+  isActive?: boolean; // 활성화 여부 (선택)
+}
