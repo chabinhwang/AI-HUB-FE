@@ -245,7 +245,24 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 수정 후 자동으로 상태 업데이트
   - 유효성 검사 포함
 
-### 3. 파일 업로드
+### 3. AI 모델 목록 조회
+
+- **엔드포인트**: `GET /api/v1/models`
+- **타입**: `src/types/model.ts` - `AIModel`
+- **API**: `src/lib/api/model.ts` - `getModels()`
+- **훅**: `src/hooks/useModels.ts` - `useModels()`
+- **인증**: Public (인증 불필요)
+- **응답 필드**:
+  - modelId, modelName, displayName, displayExplain
+  - inputPricePer1k, outputPricePer1k, averagePricePer1k
+  - isActive, createdAt
+- **특징**:
+  - Public API로 인증 없이 사용 가능
+  - 활성화된 모델만 반환됨
+  - `activeModels` 필터링 제공
+  - `getModelById()` 헬퍼 함수 제공
+
+### 4. 파일 업로드
 
 - **엔드포인트**: `POST /api/v1/messages/files/upload`
 - **타입**: `src/types/upload.ts`
@@ -257,7 +274,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 이미지/문서만 허용
   - 파일 유효성 검사 포함
 
-### 4. 메시지 목록 조회 (페이지네이션)
+### 5. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
 - **타입**: `src/types/message.ts` - `MessagesPageResponse`
@@ -270,7 +287,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `size` (기본값: 50, 1~200)
   - `sort` (기본값: "createdAt,asc")
 
-### 5. 메시지 전송 및 AI 응답 (SSE)
+### 6. 메시지 전송 및 AI 응답 (SSE)
 
 - **엔드포인트**: `POST /api/v1/messages/send/{roomId}`
 - **타입**: `src/types/message.ts` - `SendMessageRequest`, `SSECompletedData`
@@ -287,7 +304,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `fileId` (선택)
   - `previousResponseId` (선택)
 
-### 6. 메시지 상세 조회
+### 7. 메시지 상세 조회
 
 - **엔드포인트**: `GET /api/v1/messages/{messageId}`
 - **타입**: `src/types/message.ts` - `MessageDetail`

@@ -1,0 +1,14 @@
+// AI 모델 목록 조회 API 타입 정의
+
+// AI 모델 정보
+export interface AIModel {
+  modelId: number; // 모델 ID
+  modelName: string; // 내부 모델 식별자 (예: gpt-4)
+  displayName: string; // 사용자 표시 이름 (예: GPT-4)
+  displayExplain: string; // 모델 설명
+  inputPricePer1k: number; // 입력 1k 토큰당 가격
+  outputPricePer1k: number; // 출력 1k 토큰당 가격
+  averagePricePer1k: number; // 평균 가격
+  isActive: boolean; // 활성화 여부
+  createdAt: string; // 생성 시각 (ISO 8601)
+}
