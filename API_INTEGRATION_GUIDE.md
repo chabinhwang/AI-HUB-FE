@@ -181,7 +181,25 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - roomId, title, coinUsage
   - lastMessageAt, createdAt
 
-### 2. 파일 업로드
+### 2. 채팅방 생성
+
+- **엔드포인트**: `POST /api/v1/chat-rooms`
+- **타입**: `src/types/room.ts` - `CreateChatRoomRequest`, `CreateChatRoomResponse`
+- **API**: `src/lib/api/room.ts` - `createChatRoom()`
+- **훅**: `src/hooks/useRooms.ts`
+  - `useRooms().createRoom()`: 일반 페이지네이션용
+  - `useInfiniteRooms().createRoom()`: 무한 스크롤용
+- **요청 필드**:
+  - `title` (필수, 최대 30자, 공백만 입력 불가)
+  - `modelId` (필수, 활성 상태의 모델만 허용)
+- **응답 필드**:
+  - roomId, title, userId
+  - coinUsage, createdAt, updatedAt
+- **특징**:
+  - 생성 후 자동으로 목록 새로고침
+  - 유효성 검사 포함
+
+### 3. 파일 업로드
 
 - **엔드포인트**: `POST /api/v1/messages/files/upload`
 - **타입**: `src/types/upload.ts`
@@ -193,7 +211,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 이미지/문서만 허용
   - 파일 유효성 검사 포함
 
-### 3. 메시지 목록 조회 (페이지네이션)
+### 4. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
 - **타입**: `src/types/message.ts` - `MessagesPageResponse`
@@ -206,7 +224,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `size` (기본값: 50, 1~200)
   - `sort` (기본값: "createdAt,asc")
 
-### 4. 메시지 전송 및 AI 응답 (SSE)
+### 5. 메시지 전송 및 AI 응답 (SSE)
 
 - **엔드포인트**: `POST /api/v1/messages/send/{roomId}`
 - **타입**: `src/types/message.ts` - `SendMessageRequest`, `SSECompletedData`
@@ -223,7 +241,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `fileId` (선택)
   - `previousResponseId` (선택)
 
-### 5. 메시지 상세 조회
+### 6. 메시지 상세 조회
 
 - **엔드포인트**: `GET /api/v1/messages/{messageId}`
 - **타입**: `src/types/message.ts` - `MessageDetail`
@@ -262,6 +280,8 @@ SSE 파싱 로직은 `src/lib/api/message.ts`의 `sendMessageWithStreaming()`에
 - `FORBIDDEN`: 권한 없음
 - `ROOM_NOT_FOUND`: 채팅방 없음
 - `MESSAGE_NOT_FOUND`: 메시지 없음
+- `MODEL_NOT_FOUND`: AI 모델 없음
+- `MODEL_NOT_ACTIVE`: AI 모델 비활성 상태
 - `INSUFFICIENT_BALANCE`: 코인 부족 (402 Payment Required)
 - `SYSTEM_ILLEGAL_STATE`: 시스템 오류
 

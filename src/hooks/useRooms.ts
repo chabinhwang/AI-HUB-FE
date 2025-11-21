@@ -1,5 +1,9 @@
 import { useState, useCallback, useEffect } from "react";
-import { getChatRooms, getNextChatRoomsPage } from "@/lib/api/room";
+import {
+  getChatRooms,
+  getNextChatRoomsPage,
+  createChatRoom,
+} from "@/lib/api/room";
 import {
   ChatRoom,
   ChatRoomsPageResponse,
@@ -7,6 +11,7 @@ import {
   RoomSortField,
   SortDirection,
   createRoomSortParam,
+  CreateChatRoomRequest,
 } from "@/types/room";
 
 interface UseRoomsOptions {
@@ -109,6 +114,28 @@ export function useRooms(options: UseRoomsOptions = {}) {
     await fetchRooms(currentPage);
   }, [pageInfo, fetchRooms]);
 
+  // 채팅방 생성
+  const createRoom = useCallback(
+    async (request: CreateChatRoomRequest) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await createChatRoom(request);
+        // 생성 후 첫 페이지로 이동하여 새로 생성된 방 표시
+        await fetchRooms(0);
+        return response.detail;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error("생성 실패");
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchRooms]
+  );
+
   // 초기 로드
   useEffect(() => {
     if (autoFetch) {
@@ -126,6 +153,7 @@ export function useRooms(options: UseRoomsOptions = {}) {
     loadPreviousPage,
     goToPage,
     refresh,
+    createRoom,
     hasNextPage: pageInfo
       ? pageInfo.currentPage + 1 < pageInfo.totalPages
       : false,
@@ -205,6 +233,28 @@ export function useInfiniteRooms(options: UseRoomsOptions = {}) {
     }
   }, [pageSize, sort, currentPage, isFetchingMore, hasMore]);
 
+  // 채팅방 생성
+  const createRoom = useCallback(
+    async (request: CreateChatRoomRequest) => {
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await createChatRoom(request);
+        // 생성 후 목록을 처음부터 다시 로드
+        await fetchInitialRooms();
+        return response.detail;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error("생성 실패");
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [fetchInitialRooms]
+  );
+
   // 초기 로드
   useEffect(() => {
     if (autoFetch) {
@@ -220,5 +270,6 @@ export function useInfiniteRooms(options: UseRoomsOptions = {}) {
     hasMore,
     fetchInitialRooms,
     fetchMoreRooms,
+    createRoom,
   };
 }
