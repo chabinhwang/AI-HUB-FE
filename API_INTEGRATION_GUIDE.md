@@ -493,6 +493,29 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - autoFetch 옵션 지원
   - 에러 콜백 지원
 
+### 5-8. 코인 충전 요청
+
+- **엔드포인트**: `POST /api/payments`
+- **타입**: `src/types/payment.ts` - `CreatePaymentRequest`, `CreatePaymentResponse`
+- **API**: `src/lib/api/payment.ts` - `createPayment()`
+- **훅**: `src/hooks/usePayments.ts` - `usePayments().createNewPayment()`
+- **인증**: 필수 (쿠키 기반)
+- **요청 필드**:
+  - `amountKrw` (필수, 1,000 이상)
+  - `paymentMethod` (필수, 예: card, transfer)
+  - `paymentGateway` (필수, 예: toss)
+- **응답 필드**:
+  - paymentId, transactionId
+  - amountKrw, amountUsd
+  - coinAmount, bonusCoin
+  - status, paymentUrl, createdAt
+- **특징**:
+  - 결제 게이트웨이에 충전 요청 생성
+  - 유효성 검사 포함 (금액, 결제 수단, 게이트웨이)
+  - 충전 후 자동으로 결제 내역 새로고침
+  - paymentUrl로 리다이렉트하여 실제 결제 진행
+  - 에러 발생 시 throw (CONFLICT: 이미 처리 중인 결제 존재)
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`

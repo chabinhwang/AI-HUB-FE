@@ -1,6 +1,11 @@
 import { useState, useCallback, useEffect } from "react";
-import { getPayments } from "@/lib/api/payment";
-import { PaymentStatus, PaymentsPageResponse } from "@/types/payment";
+import { getPayments, createPayment } from "@/lib/api/payment";
+import {
+  PaymentStatus,
+  PaymentsPageResponse,
+  CreatePaymentRequest,
+  CreatePaymentResponse,
+} from "@/types/payment";
 
 interface UsePaymentsOptions {
   page?: number; // 페이지 번호 (기본값: 0)
@@ -16,6 +21,7 @@ export function usePayments(options: UsePaymentsOptions = {}) {
   const [payments, setPayments] = useState<PaymentsPageResponse | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   // 결제 내역 조회
   const fetchPayments = useCallback(
@@ -47,6 +53,31 @@ export function usePayments(options: UsePaymentsOptions = {}) {
     await fetchPayments();
   }, [fetchPayments]);
 
+  // 코인 충전 요청
+  const createNewPayment = useCallback(
+    async (
+      request: CreatePaymentRequest
+    ): Promise<CreatePaymentResponse | null> => {
+      setIsCreating(true);
+      setError(null);
+
+      try {
+        const response = await createPayment(request);
+        // 충전 후 자동으로 결제 내역 새로고침
+        await fetchPayments();
+        return response.detail;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error("충전 요청 실패");
+        setError(error);
+        onError?.(error);
+        return null;
+      } finally {
+        setIsCreating(false);
+      }
+    },
+    [fetchPayments, onError]
+  );
+
   // 초기 로드
   useEffect(() => {
     if (autoFetch) {
@@ -58,7 +89,9 @@ export function usePayments(options: UsePaymentsOptions = {}) {
     payments,
     isLoading,
     error,
+    isCreating,
     fetchPayments,
     refresh,
+    createNewPayment,
   };
 }

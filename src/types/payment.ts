@@ -40,3 +40,23 @@ export interface PaymentDetail {
   createdAt: string; // 결제 생성 시각 (ISO 8601)
   completedAt: string | null; // 결제 완료 시각 (ISO 8601, null 가능)
 }
+
+// 코인 충전 요청
+export interface CreatePaymentRequest {
+  amountKrw: number; // 결제 금액 (KRW, 1000 이상)
+  paymentMethod: string; // 결제 수단 (예: card, transfer)
+  paymentGateway: string; // 결제 게이트웨이 코드 (예: toss)
+}
+
+// 코인 충전 응답
+export interface CreatePaymentResponse {
+  paymentId: number; // 생성된 결제 ID
+  transactionId: string; // 게이트웨이 거래 ID
+  amountKrw: number; // 결제 금액 (KRW)
+  amountUsd: number; // 달러 금액
+  coinAmount: number; // 지급 예정 코인
+  bonusCoin: number; // 지급 예정 보너스 코인
+  status: PaymentStatus; // 결제 상태 (pending)
+  paymentUrl: string; // 결제 URL
+  createdAt: string; // 결제 생성 시각 (ISO 8601)
+}

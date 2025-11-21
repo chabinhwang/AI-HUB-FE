@@ -2,6 +2,8 @@ import {
   PaymentStatus,
   PaymentsPageResponse,
   PaymentDetail,
+  CreatePaymentRequest,
+  CreatePaymentResponse,
 } from "@/types/payment";
 import { ApiErrorDetail, ApiResponse } from "@/types/upload";
 
@@ -135,5 +137,71 @@ export async function getPaymentDetail(
       throw error;
     }
     throw new Error("결제 상세 조회 중 오류가 발생했습니다.");
+  }
+}
+
+/**
+ * 코인 충전 요청
+ * 쿠키 기반 인증 필수
+ */
+export async function createPayment(
+  request: CreatePaymentRequest
+): Promise<ApiResponse<CreatePaymentResponse>> {
+  // 유효성 검사
+  if (!request.amountKrw || request.amountKrw < 1000) {
+    throw new Error("결제 금액은 1,000원 이상이어야 합니다.");
+  }
+
+  if (!request.paymentMethod || request.paymentMethod.trim() === "") {
+    throw new Error("결제 수단을 선택해주세요.");
+  }
+
+  if (!request.paymentGateway || request.paymentGateway.trim() === "") {
+    throw new Error("결제 게이트웨이를 선택해주세요.");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/payments`, {
+      method: "POST",
+      credentials: "include", // 쿠키 포함
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(request),
+    });
+
+    const data:
+      | ApiResponse<CreatePaymentResponse>
+      | ApiResponse<ApiErrorDetail> = await response.json();
+
+    // 성공 응답 (201 Created)
+    if (response.ok && data.success) {
+      return data as ApiResponse<CreatePaymentResponse>;
+    }
+
+    // 에러 응답
+    const errorDetail = data.detail as ApiErrorDetail;
+
+    // 특정 에러 코드별 처리
+    switch (errorDetail.code) {
+      case "AUTHENTICATION_FAILED":
+      case "INVALID_TOKEN":
+        throw new Error("인증이 필요합니다. 다시 로그인해주세요.");
+      case "FORBIDDEN":
+        throw new Error("접근 권한이 없습니다.");
+      case "VALIDATION_ERROR":
+        throw new Error(errorDetail.message || "잘못된 요청입니다.");
+      case "CONFLICT":
+        throw new Error(
+          errorDetail.message || "이미 처리 중인 결제 요청이 있습니다."
+        );
+      default:
+        throw new Error(errorDetail.message || "결제 요청에 실패했습니다.");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("결제 요청 중 오류가 발생했습니다.");
   }
 }
