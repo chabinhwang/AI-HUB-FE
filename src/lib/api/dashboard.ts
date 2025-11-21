@@ -1,4 +1,4 @@
-import { DashboardStats } from "@/types/dashboard";
+import { DashboardStats, ModelPricing } from "@/types/dashboard";
 import { ApiErrorDetail, ApiResponse } from "@/types/upload";
 
 // API 베이스 URL
@@ -48,5 +48,54 @@ export async function getDashboardStats(): Promise<
       throw error;
     }
     throw new Error("통계 조회 중 오류가 발생했습니다.");
+  }
+}
+
+/**
+ * 모델별 가격 대시보드 조회
+ * Public API (인증 불필요)
+ */
+export async function getModelsPricing(): Promise<
+  ApiResponse<ModelPricing[]>
+> {
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/api/v1/dashboard/models/pricing`,
+      {
+        method: "GET",
+        credentials: "include", // 쿠키 포함 (선택적)
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data: ApiResponse<ModelPricing[]> | ApiResponse<ApiErrorDetail> =
+      await response.json();
+
+    // 성공 응답 (200 OK)
+    if (response.ok && data.success) {
+      return data as ApiResponse<ModelPricing[]>;
+    }
+
+    // 에러 응답
+    const errorDetail = data.detail as ApiErrorDetail;
+
+    // 특정 에러 코드별 처리
+    switch (errorDetail.code) {
+      case "SYSTEM_ILLEGAL_STATE":
+        throw new Error(
+          errorDetail.message || "모델 가격 정보를 가져올 수 없습니다."
+        );
+      default:
+        throw new Error(
+          errorDetail.message || "모델 가격 조회에 실패했습니다."
+        );
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("모델 가격 조회 중 오류가 발생했습니다.");
   }
 }

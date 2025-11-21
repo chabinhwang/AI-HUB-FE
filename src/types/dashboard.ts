@@ -19,3 +19,14 @@ export interface DashboardStats {
   last30DaysUsage: number; // 최근 30일 사용량
   memberSince: string; // 가입 일시 (ISO 8601)
 }
+
+// 모델 가격 정보
+export interface ModelPricing {
+  modelId: number; // 모델 고유 ID
+  modelName: string; // 모델 이름 (예: gpt-4)
+  displayName: string; // 표시명 (예: GPT-4)
+  inputPricePer1k: number; // 입력 1000토큰당 가격 (USD)
+  outputPricePer1k: number; // 출력 1000토큰당 가격 (USD)
+  averagePricePer1k: number; // 평균 1000토큰당 가격 (USD)
+  isActive: boolean; // 활성화 상태
+}

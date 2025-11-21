@@ -371,6 +371,23 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - autoFetch 옵션 지원
   - 에러 콜백 지원
 
+### 5-1. 모델별 가격 대시보드
+
+- **엔드포인트**: `GET /api/v1/dashboard/models/pricing`
+- **타입**: `src/types/dashboard.ts` - `ModelPricing`
+- **API**: `src/lib/api/dashboard.ts` - `getModelsPricing()`
+- **훅**: `src/hooks/useModelsPricing.ts` - `useModelsPricing()`
+- **인증**: Public (인증 불필요)
+- **응답 필드**:
+  - modelId, modelName, displayName
+  - inputPricePer1k, outputPricePer1k, averagePricePer1k
+  - isActive
+- **특징**:
+  - Public API로 인증 없이 사용 가능
+  - 활성화된 모델만 반환됨
+  - autoFetch 옵션 지원
+  - getModelById() 헬퍼 함수 제공
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
