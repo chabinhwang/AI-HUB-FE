@@ -165,7 +165,23 @@ export function useYourFeature(options: UseYourFeatureOptions) {
 
 ## 구현된 API 목록
 
-### 1. 파일 업로드
+### 1. 채팅방 목록 조회
+
+- **엔드포인트**: `GET /api/v1/chat-rooms`
+- **타입**: `src/types/room.ts`
+- **API**: `src/lib/api/room.ts` - `getChatRooms()`
+- **훅**: `src/hooks/useRooms.ts`
+  - `useRooms()`: 일반 페이지네이션
+  - `useInfiniteRooms()`: 무한 스크롤
+- **쿼리 파라미터**:
+  - `page` (기본값: 0)
+  - `size` (기본값: 20, 1~100)
+  - `sort` (기본값: "createdAt,desc")
+- **응답 필드**:
+  - roomId, title, coinUsage
+  - lastMessageAt, createdAt
+
+### 2. 파일 업로드
 
 - **엔드포인트**: `POST /api/v1/messages/files/upload`
 - **타입**: `src/types/upload.ts`
@@ -177,7 +193,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 이미지/문서만 허용
   - 파일 유효성 검사 포함
 
-### 2. 메시지 목록 조회 (페이지네이션)
+### 3. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
 - **타입**: `src/types/message.ts` - `MessagesPageResponse`
@@ -190,7 +206,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `size` (기본값: 50, 1~200)
   - `sort` (기본값: "createdAt,asc")
 
-### 3. 메시지 전송 및 AI 응답 (SSE)
+### 4. 메시지 전송 및 AI 응답 (SSE)
 
 - **엔드포인트**: `POST /api/v1/messages/send/{roomId}`
 - **타입**: `src/types/message.ts` - `SendMessageRequest`, `SSECompletedData`
@@ -207,7 +223,7 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `fileId` (선택)
   - `previousResponseId` (선택)
 
-### 4. 메시지 상세 조회
+### 5. 메시지 상세 조회
 
 - **엔드포인트**: `GET /api/v1/messages/{messageId}`
 - **타입**: `src/types/message.ts` - `MessageDetail`
@@ -287,9 +303,13 @@ switch (errorDetail.code) {
 ### 정렬 파라미터 생성
 
 ```typescript
+// 메시지 정렬
 import { createSortParam } from "@/types/message";
-
 const sort = createSortParam("createdAt", "desc"); // "createdAt,desc"
+
+// 채팅방 정렬
+import { createRoomSortParam } from "@/types/room";
+const sort = createRoomSortParam("lastMessageAt", "desc"); // "lastMessageAt,desc"
 ```
 
 ### 파일 검증
