@@ -408,6 +408,21 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 동적 년/월 조회 가능 (fetchUsage(year, month))
   - autoFetch 옵션 지원
 
+### 5-3. 내 정보 조회
+
+- **엔드포인트**: `GET /api/users/me`
+- **타입**: `src/types/user.ts` - `UserInfo`
+- **API**: `src/lib/api/user.ts` - `getCurrentUser()`
+- **훅**: `src/hooks/useCurrentUser.ts` - `useCurrentUser()`
+- **인증**: 필수 (쿠키 기반)
+- **응답 필드**:
+  - userId, username, email
+  - isActivated, createdAt
+- **특징**:
+  - 현재 로그인한 사용자 정보 제공
+  - autoFetch 옵션 지원
+  - 에러 콜백 지원
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
