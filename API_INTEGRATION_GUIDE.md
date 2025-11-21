@@ -538,6 +538,22 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - 취소 후 자동으로 결제 상세 정보 새로고침
   - 에러 발생 시 throw (PAYMENT_NOT_FOUND: 결제 내역 없음)
 
+### 5-10. 로그아웃
+
+- **엔드포인트**: `POST /api/auth/logout`
+- **타입**: `src/types/auth.ts` - `LogoutRequest`
+- **API**: `src/lib/api/auth.ts` - `logout()`
+- **훅**: `src/hooks/useLogout.ts` - `useLogout()`
+- **인증**: 필수 (쿠키 기반)
+- **요청 필드**:
+  - `refreshToken` (필수, 폐기할 리프레시 토큰)
+- **응답**: 204 No Content
+- **특징**:
+  - 액세스 토큰과 리프레시 토큰 폐기
+  - 유효성 검사 포함 (리프레시 토큰 필수)
+  - onSuccess, onError 콜백 지원
+  - 에러 발생 시 throw (VALIDATION_ERROR, INVALID_TOKEN)
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
