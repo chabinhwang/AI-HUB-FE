@@ -30,3 +30,30 @@ export interface ModelPricing {
   averagePricePer1k: number; // 평균 1000토큰당 가격 (USD)
   isActive: boolean; // 활성화 상태
 }
+
+// 모델별 사용량
+export interface ModelUsage {
+  modelId: number; // 모델 ID
+  modelName: string; // 모델 이름 (예: gpt-4)
+  displayName: string; // 표시명 (예: GPT-4)
+  coinUsed: number; // 코인 사용량
+  messageCount: number; // 메시지 수
+  tokenCount: number; // 토큰 수
+  percentage: number; // 비율 (%)
+}
+
+// 일별 사용량
+export interface DailyUsage {
+  date: string; // 날짜 (YYYY-MM-DD)
+  coinUsed: number; // 코인 사용량
+  messageCount: number; // 메시지 수
+}
+
+// 월별 모델별 코인 사용량
+export interface MonthlyUsage {
+  year: number; // 연도
+  month: number; // 월
+  totalCoinUsed: number; // 총 코인 사용량
+  modelUsage: ModelUsage[]; // 모델별 사용량 목록
+  dailyUsage: DailyUsage[]; // 일별 사용량 목록
+}

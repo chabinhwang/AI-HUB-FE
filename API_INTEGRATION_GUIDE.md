@@ -388,6 +388,26 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - autoFetch 옵션 지원
   - getModelById() 헬퍼 함수 제공
 
+### 5-2. 월별 모델별 코인 사용량
+
+- **엔드포인트**: `GET /api/v1/dashboard/usage/monthly`
+- **타입**: `src/types/dashboard.ts` - `MonthlyUsage`, `ModelUsage`, `DailyUsage`
+- **API**: `src/lib/api/dashboard.ts` - `getMonthlyUsage()`
+- **훅**: `src/hooks/useMonthlyUsage.ts` - `useMonthlyUsage()`
+- **인증**: 필수 (쿠키 기반)
+- **쿼리 파라미터**:
+  - `year` (선택, 기본값: 현재 연도)
+  - `month` (선택, 기본값: 현재 월, 1-12)
+- **응답 필드**:
+  - year, month, totalCoinUsed
+  - modelUsage[] (modelId, modelName, displayName, coinUsed, messageCount, tokenCount, percentage)
+  - dailyUsage[] (date, coinUsed, messageCount)
+- **특징**:
+  - 사용자별 월별 통계 제공
+  - 모델별/일별 사용량 상세 정보
+  - 동적 년/월 조회 가능 (fetchUsage(year, month))
+  - autoFetch 옵션 지원
+
 ### 6. 메시지 목록 조회 (페이지네이션)
 
 - **엔드포인트**: `GET /api/v1/messages/page/{roomId}`
