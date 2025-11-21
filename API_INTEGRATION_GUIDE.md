@@ -262,6 +262,24 @@ export function useYourFeature(options: UseYourFeatureOptions) {
   - `activeModels` 필터링 제공
   - `getModelById()` 헬퍼 함수 제공
 
+### 3-1. AI 모델 상세 조회
+
+- **엔드포인트**: `GET /api/v1/models/{modelId}`
+- **타입**: `src/types/model.ts` - `AIModelDetail`
+- **API**: `src/lib/api/model.ts` - `getModelDetail()`
+- **훅**: `src/hooks/useModelDetail.ts` - `useModelDetail()`
+- **인증**: Public (인증 불필요)
+- **경로 변수**:
+  - `modelId` (integer)
+- **응답 필드**:
+  - modelId, modelName, displayName, displayExplain
+  - inputPricePer1k, outputPricePer1k
+  - isActive, createdAt, updatedAt
+- **특징**:
+  - Public API로 인증 없이 사용 가능
+  - autoFetch 옵션 지원
+  - 에러 콜백 지원
+
 ### 4. 파일 업로드
 
 - **엔드포인트**: `POST /api/v1/messages/files/upload`

@@ -1,4 +1,4 @@
-import { AIModel } from "@/types/model";
+import { AIModel, AIModelDetail } from "@/types/model";
 import { ApiErrorDetail, ApiResponse } from "@/types/upload";
 
 // API 베이스 URL
@@ -45,5 +45,58 @@ export async function getModels(): Promise<ApiResponse<AIModel[]>> {
       throw error;
     }
     throw new Error("모델 목록 조회 중 오류가 발생했습니다.");
+  }
+}
+
+/**
+ * 특정 AI 모델의 상세 정보 조회
+ * Public API (인증 불필요)
+ */
+export async function getModelDetail(
+  modelId: number
+): Promise<ApiResponse<AIModelDetail>> {
+  // 유효성 검사
+  if (!modelId || modelId <= 0) {
+    throw new Error("유효한 모델 ID가 필요합니다.");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/models/${modelId}`, {
+      method: "GET",
+      credentials: "include", // 쿠키 포함 (선택적)
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data: ApiResponse<AIModelDetail> | ApiResponse<ApiErrorDetail> =
+      await response.json();
+
+    // 성공 응답 (200 OK)
+    if (response.ok && data.success) {
+      return data as ApiResponse<AIModelDetail>;
+    }
+
+    // 에러 응답
+    const errorDetail = data.detail as ApiErrorDetail;
+
+    // 특정 에러 코드별 처리
+    switch (errorDetail.code) {
+      case "MODEL_NOT_FOUND":
+        throw new Error("요청한 모델을 찾을 수 없습니다.");
+      case "SYSTEM_ILLEGAL_STATE":
+        throw new Error(
+          errorDetail.message || "모델 정보를 가져올 수 없습니다."
+        );
+      default:
+        throw new Error(
+          errorDetail.message || "모델 조회에 실패했습니다."
+        );
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("모델 조회 중 오류가 발생했습니다.");
   }
 }
