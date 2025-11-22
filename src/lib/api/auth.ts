@@ -8,6 +8,26 @@ import {
 // API 베이스 URL
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "";
 
+// OAuth 베이스 URL (카카오 로그인용)
+const OAUTH_BASE_URL =
+  process.env.NEXT_PUBLIC_OAUTH_BASE_URL || "https://api.aihub.io.kr";
+
+/**
+ * 카카오 OAuth 로그인 시작
+ * 카카오 인증 페이지로 리다이렉트
+ */
+export function startKakaoLogin(): void {
+  const kakaoAuthUrl = `${OAUTH_BASE_URL}/oauth2/authorization/kakao`;
+  window.location.href = kakaoAuthUrl;
+}
+
+/**
+ * 카카오 OAuth URL 반환 (리다이렉트 없이 URL만 필요한 경우)
+ */
+export function getKakaoLoginUrl(): string {
+  return `${OAUTH_BASE_URL}/oauth2/authorization/kakao`;
+}
+
 /**
  * 로그아웃 (액세스 토큰과 리프레시 토큰 폐기)
  * 쿠키 기반 인증 필수
