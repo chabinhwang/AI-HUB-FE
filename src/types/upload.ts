@@ -10,15 +10,15 @@ export interface UploadFileResponse {
   expiresAt: string;
 }
 
-// AI 서버 파일 업로드 응답 (POST /api/v1/messages/files/upload)
+// 파일 업로드 응답 (POST /api/v1/messages/files/upload)
+// R2에 저장 후 반환되는 정보
 export interface MessageFileUploadResponse {
-  fileId: string;
-}
-
-// AI 서버 파일 업로드 요청 파라미터
-export interface MessageFileUploadParams {
-  file: File;
-  modelId: number;
+  fileUrl: string;      // R2에 저장된 파일의 공개 접근 URL (1년 유효)
+  fileName: string;     // 원본 파일명
+  fileSize: number;     // 파일 크기 (바이트)
+  contentType: string;  // MIME 타입
+  uploadedAt: string;   // 업로드 완료 시각 (ISO 8601)
+  expiresAt: string;    // URL 만료 시각 (ISO 8601)
 }
 
 export interface ApiResponse<T> {

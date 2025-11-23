@@ -20,19 +20,25 @@ export function useChatWithAPI(options: UseChatOptions) {
   const [isStreaming, setIsStreaming] = useState(false);
   const [isUploadingFile, setIsUploadingFile] = useState(false);
   const [pastedImage, setPastedImage] = useState<string | null>(null);
-  const [uploadedFileId, setUploadedFileId] = useState<string | null>(null);
+  const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // 파일 업로드 처리
   const handleFileUpload = useCallback(
     async (file: File) => {
+      if (!modelId) {
+        const error = new Error("AI 모델이 선택되지 않았습니다.");
+        onError?.(error);
+        throw error;
+      }
+
       setIsUploadingFile(true);
       try {
         const response = await uploadFile(file, modelId);
-        // AI 서버에서 발급한 fileId 반환
-        const fileId = response.detail.fileId;
-        setUploadedFileId(fileId);
-        return fileId;
+        // R2에 저장된 파일 URL 반환
+        const fileUrl = response.detail.fileUrl;
+        setUploadedFileUrl(fileUrl);
+        return fileUrl;
       } catch (err) {
         const error = err instanceof Error ? err : new Error("파일 업로드 실패");
         onError?.(error);
@@ -95,12 +101,12 @@ export function useChatWithAPI(options: UseChatOptions) {
         return;
       }
 
-      let fileId: string | null = null;
+      let fileUrl: string | null = null;
 
       // 이미지가 있으면 먼저 업로드
       if (imageData) {
         try {
-          fileId = await uploadImageData(imageData);
+          fileUrl = await uploadImageData(imageData);
         } catch (error) {
           console.error("Image upload failed:", error);
           return;
@@ -120,7 +126,7 @@ export function useChatWithAPI(options: UseChatOptions) {
       setMessages((prev) => [...prev, userMessage]);
       setIsStreaming(true);
       setPastedImage(null);
-      setUploadedFileId(null);
+      setUploadedFileUrl(null);
 
       // AI 응답 메시지 생성 (빈 내용으로 시작)
       const assistantMessageId = (Date.now() + 1).toString();
@@ -144,7 +150,7 @@ export function useChatWithAPI(options: UseChatOptions) {
           {
             message: msg,
             modelId,
-            fileId: fileId || undefined,
+            fileUrl: fileUrl || undefined,
             previousResponseId,
           },
           {
@@ -279,7 +285,7 @@ export function useChatWithAPI(options: UseChatOptions) {
   // 이미지 제거
   const removePastedImage = useCallback(() => {
     setPastedImage(null);
-    setUploadedFileId(null);
+    setUploadedFileUrl(null);
   }, []);
 
   return {

@@ -37,11 +37,11 @@ export function validateFile(file: File): {
 }
 
 /**
- * AI 서버 파일 업로드 API (메시지 전송용)
+ * 파일 업로드 API (R2 저장)
  * 쿠키 기반 인증 사용
  * @param file - 업로드할 파일
  * @param modelId - AI 모델 ID
- * @returns fileId - 메시지 전송 시 사용할 파일 ID
+ * @returns fileUrl 등 업로드된 파일 정보
  */
 export async function uploadFile(
   file: File,
@@ -51,11 +51,6 @@ export async function uploadFile(
   const validation = validateFile(file);
   if (!validation.isValid) {
     throw new Error(validation.error);
-  }
-
-  // modelId 유효성 검사
-  if (!modelId || modelId <= 0) {
-    throw new Error("유효한 AI 모델 ID가 필요합니다.");
   }
 
   // FormData 생성
