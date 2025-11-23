@@ -20,9 +20,11 @@ interface SidebarProps {
   onClose: () => void;
   onDashboardClick?: () => void;
   onBalanceClick?: () => void;
+  onChatRoomClick?: (roomId: string) => void;
+  refreshTrigger?: number; // 이 값이 변경되면 채팅방 목록을 새로고침
 }
 
-export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick }: SidebarProps) {
+export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick, onChatRoomClick, refreshTrigger }: SidebarProps) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [chatRooms, setChatRooms] = useState<ChatRoom[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,6 +48,13 @@ export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick }: S
       fetchChatRooms();
     }
   }, [isOpen, fetchChatRooms]);
+
+  // refreshTrigger가 변경되면 채팅방 목록 새로고침
+  useEffect(() => {
+    if (refreshTrigger !== undefined && refreshTrigger > 0) {
+      fetchChatRooms();
+    }
+  }, [refreshTrigger, fetchChatRooms]);
 
   return (
     <>
@@ -144,7 +153,11 @@ export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick }: S
             </div>
           ) : (
             chatRooms.map((room) => (
-              <div key={room.roomId} className="h-[45px] relative hover:bg-[#2c2e30] cursor-pointer">
+              <div
+                key={room.roomId}
+                className="h-[45px] relative hover:bg-[#2c2e30] cursor-pointer"
+                onClick={() => onChatRoomClick?.(room.roomId)}
+              >
                 <p className="absolute font-['Pretendard:Regular',sans-serif] leading-[normal] left-[17px] not-italic text-[16px] text-neutral-100 top-[10px] w-[149px] truncate">
                   {room.title}
                 </p>

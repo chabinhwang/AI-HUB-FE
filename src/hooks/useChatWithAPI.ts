@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { Message } from "@/types/chat";
-import { sendMessageWithStreaming } from "@/lib/api/message";
+import { sendMessageWithStreaming, getMessages, convertToUIMessages } from "@/lib/api/message";
 import { uploadFile } from "@/lib/api/upload";
 import { SSECompletedData } from "@/types/message";
 
@@ -288,6 +288,23 @@ export function useChatWithAPI(options: UseChatOptions) {
     setUploadedFileUrl(null);
   }, []);
 
+  // 특정 채팅방의 메시지 로드
+  const loadMessagesForRoom = useCallback(async (targetRoomId: string) => {
+    try {
+      const response = await getMessages({ roomId: targetRoomId, page: 0, size: 100, sort: "createdAt,asc" });
+      const uiMessages = convertToUIMessages(response.detail.content);
+      setMessages(uiMessages as Message[]);
+    } catch (error) {
+      console.error("Failed to load messages:", error);
+      onError?.(error instanceof Error ? error : new Error("메시지 로드 실패"));
+    }
+  }, [onError]);
+
+  // 메시지 초기화
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
   return {
     messages,
     message,
@@ -301,5 +318,7 @@ export function useChatWithAPI(options: UseChatOptions) {
     handlePasteImage,
     removePastedImage,
     handleFileUpload,
+    loadMessagesForRoom,
+    clearMessages,
   };
 }

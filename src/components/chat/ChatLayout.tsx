@@ -30,6 +30,7 @@ export function ChatLayout() {
   const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
   const [roomId, setRoomId] = useState<string | null>(null);
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [sidebarRefreshTrigger, setSidebarRefreshTrigger] = useState(0);
 
   // 채팅방 생성 함수
   const createNewChatRoom = useCallback(async (modelId: number) => {
@@ -65,6 +66,8 @@ export function ChatLayout() {
     handlePasteImage,
     removePastedImage,
     handleFileUpload,
+    loadMessagesForRoom,
+    clearMessages,
   } = useChatWithAPI({
     roomId: roomId || "",
     modelId: selectedModelId || 0,
@@ -80,6 +83,8 @@ export function ChatLayout() {
     },
     onRoomCreated: (newRoomId) => {
       setRoomId(newRoomId);
+      // 사이드바 채팅방 목록 새로고침
+      setSidebarRefreshTrigger((prev) => prev + 1);
     },
   });
 
@@ -88,12 +93,25 @@ export function ChatLayout() {
     if (isCreatingRoom || !selectedModelId) return;
     try {
       await createNewChatRoom(selectedModelId);
-      // 메시지 초기화는 useChatWithAPI에서 roomId 변경 시 처리
-      window.location.reload(); // 간단하게 새로고침으로 상태 초기화
+      clearMessages();
+      setSidebarRefreshTrigger((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to create new chat:", error);
     }
-  }, [selectedModelId, isCreatingRoom, createNewChatRoom]);
+  }, [selectedModelId, isCreatingRoom, createNewChatRoom, clearMessages]);
+
+  // 채팅방 클릭 핸들러 (사이드바에서 채팅방 선택 시)
+  const handleChatRoomClick = useCallback(async (clickedRoomId: string) => {
+    if (clickedRoomId === roomId) {
+      // 이미 같은 채팅방이면 사이드바만 닫기
+      setSidebarOpen(false);
+      return;
+    }
+
+    setRoomId(clickedRoomId);
+    await loadMessagesForRoom(clickedRoomId);
+    setSidebarOpen(false);
+  }, [roomId, loadMessagesForRoom]);
 
   // Dashboard를 보여줄 때
   if (showDashboard) {
@@ -118,6 +136,8 @@ export function ChatLayout() {
           setShowBalance(true);
           setSidebarOpen(false);
         }}
+        onChatRoomClick={handleChatRoomClick}
+        refreshTrigger={sidebarRefreshTrigger}
       />
 
       {/* Main Content */}
