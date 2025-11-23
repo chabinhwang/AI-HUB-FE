@@ -34,7 +34,11 @@ export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick, onC
     setIsLoading(true);
     try {
       const response = await getChatRooms({ page: 0, size: 20, sort: "createdAt,desc" });
-      setChatRooms(response.detail.content);
+      // 메시지가 있는 채팅방만 필터링 (lastMessageAt이 있는 경우)
+      const roomsWithMessages = response.detail.content.filter(
+        (room) => room.lastMessageAt && room.lastMessageAt.trim() !== ""
+      );
+      setChatRooms(roomsWithMessages);
     } catch (error) {
       console.error("Failed to fetch chat rooms:", error);
     } finally {
