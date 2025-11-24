@@ -290,8 +290,11 @@ export function convertToUIMessages(apiMessages: ApiMessage[]) {
     content: msg.content,
     role: msg.role,
     timestamp: new Date(msg.createdAt),
-    // 추가 정보는 필요시 확장 가능
     metadata: {
+      // role에 따라 inputTokens 또는 outputTokens로 매핑
+      ...(msg.role === "user"
+        ? { inputTokens: msg.tokenCount, userMessageId: msg.messageId }
+        : { outputTokens: msg.tokenCount, aiResponseId: msg.messageId }),
       tokenCount: msg.tokenCount,
       coinCount: msg.coinCount,
       modelId: msg.modelId,
