@@ -10,6 +10,7 @@ import { MessageList } from "./MessageList";
 import { Dashboard } from "../dashboard/Dashboard";
 import { Balance } from "../balance/Balance";
 import { useChatWithAPI } from "@/hooks/useChatWithAPI";
+import { useCurrentUser } from "@/hooks/useCurrentUser";
 import { createChatRoom } from "@/lib/api/room";
 import svgPathsMain from "@/assets/svgs/main";
 
@@ -28,6 +29,9 @@ export function ChatLayout() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showBalance, setShowBalance] = useState(false);
   const [selectedModelId, setSelectedModelId] = useState<number | null>(null);
+
+  // 현재 로그인한 사용자 정보 조회
+  const { user } = useCurrentUser();
   const [roomId, setRoomId] = useState<string | null>(null);
   const [isCreatingRoom, setIsCreatingRoom] = useState(false);
   const [sidebarRefreshTrigger, setSidebarRefreshTrigger] = useState(0);
@@ -212,7 +216,7 @@ export function ChatLayout() {
         {/* Welcome Message and Suggested Prompts - only show when no messages */}
         {messages.length === 0 && (
           <>
-            <WelcomeMessage />
+            <WelcomeMessage username={user?.username || user?.email?.split("@")[0]} />
             <SuggestedPrompts onPromptClick={handleSendMessage} />
           </>
         )}
