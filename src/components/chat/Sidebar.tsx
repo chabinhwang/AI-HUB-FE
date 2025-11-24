@@ -96,22 +96,6 @@ export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick, onC
           <img src="/pencil.svg" alt="pencil" className="absolute left-[7px] top-[10px]" />
         </button>
 
-        {/* Previous Chats Section */}
-        <div className="h-[57px] border-b border-[#2c2e30] relative">
-          <p className="absolute font-['Pretendard:Regular',sans-serif] leading-[normal] left-[calc(12.5%+2.75px)] not-italic text-[16px] text-neutral-100 text-nowrap top-[20px] whitespace-pre">
-            이전 기록
-          </p>
-          <div className="absolute left-[5px] size-[30px] top-[13px]" data-name="message-circle">
-            <div className="absolute inset-[12.5%]" data-name="Icon">
-              <div className="absolute inset-[-4.44%]" style={{ "--stroke-0": "rgba(245, 245, 245, 1)" } as React.CSSProperties}>
-                <svg className="block size-full" fill="none" preserveAspectRatio="none" viewBox="0 0 25 25">
-                  <path d={svgPathsSidebar.p2874a000} id="Icon" stroke="var(--stroke-0, #F5F5F5)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </div>
-
         {/* AI Usage Section */}
         <button
           onClick={onDashboardClick}
