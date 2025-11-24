@@ -36,7 +36,6 @@ export function ModelSelector({ onModelChange }: ModelSelectorProps) {
           onModelChange?.(activeModels[0]);
         }
       } catch (err) {
-        console.error("Failed to fetch models:", err);
         setError("모델 목록을 불러올 수 없습니다.");
       } finally {
         setIsLoading(false);

@@ -46,10 +46,8 @@ export function ChatLayout() {
       });
       const newRoomId = response.detail.roomId;
       setRoomId(newRoomId);
-      console.log(`Chat room created: ${newRoomId}`);
       return newRoomId;
     } catch (error) {
-      console.error("Failed to create chat room:", error);
       throw error;
     } finally {
       setIsCreatingRoom(false);
@@ -76,7 +74,6 @@ export function ChatLayout() {
     roomId: roomId || "",
     modelId: selectedModelId || 0,
     onError: (error) => {
-      console.error("Chat error:", error.message);
     },
     createRoom: async () => {
       if (!selectedModelId) {
@@ -102,7 +99,6 @@ export function ChatLayout() {
       clearMessages();
       setSidebarRefreshTrigger((prev) => prev + 1);
     } catch (error) {
-      console.error("Failed to create new chat:", error);
     }
   }, [selectedModelId, isCreatingRoom, createNewChatRoom, clearMessages]);
 
@@ -185,7 +181,6 @@ export function ChatLayout() {
             <ModelSelector
               onModelChange={(model) => {
                 setSelectedModelId(model.modelId);
-                console.log(`Model changed: ${model.displayName} (ID: ${model.modelId})`);
               }}
             />
           </div>

@@ -41,7 +41,6 @@ export function Sidebar({ isOpen, onClose, onDashboardClick, onBalanceClick, onC
       );
       setChatRooms(roomsWithMessages);
     } catch (error) {
-      console.error("Failed to fetch chat rooms:", error);
     } finally {
       setIsLoading(false);
     }

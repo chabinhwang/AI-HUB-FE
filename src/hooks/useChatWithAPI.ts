@@ -112,7 +112,6 @@ export function useChatWithAPI(options: UseChatOptions) {
           currentRoomId = await createRoom();
           onRoomCreated?.(currentRoomId);
         } catch (error) {
-          console.error("Failed to create room:", error);
           onError?.(error instanceof Error ? error : new Error("채팅방 생성 실패"));
           return;
         }
@@ -168,7 +167,6 @@ export function useChatWithAPI(options: UseChatOptions) {
           },
           {
             onStart: () => {
-              console.log("Streaming started");
             },
             onDelta: (text) => {
               accumulatedContent += text;
@@ -183,7 +181,6 @@ export function useChatWithAPI(options: UseChatOptions) {
               );
             },
             onCompleted: (data: SSECompletedData) => {
-              console.log("Streaming completed:", data);
 
               // 최종 메시지에 메타데이터 추가
               setMessages((prev) =>
@@ -215,7 +212,6 @@ export function useChatWithAPI(options: UseChatOptions) {
               onMessageComplete?.();
             },
             onError: (error) => {
-              console.error("Streaming error:", error);
 
               // 에러 메시지 표시
               setMessages((prev) =>
@@ -237,9 +233,7 @@ export function useChatWithAPI(options: UseChatOptions) {
         );
       } catch (error) {
         if ((error as Error).name === "AbortError") {
-          console.log("Stream aborted");
         } else {
-          console.error("Error streaming message:", error);
 
           const err = error instanceof Error ? error : new Error("전송 실패");
 
@@ -313,7 +307,6 @@ export function useChatWithAPI(options: UseChatOptions) {
       const uiMessages = convertToUIMessages(response.detail.content);
       setMessages(uiMessages as Message[]);
     } catch (error) {
-      console.error("Failed to load messages:", error);
       onError?.(error instanceof Error ? error : new Error("메시지 로드 실패"));
     }
   }, [onError]);
