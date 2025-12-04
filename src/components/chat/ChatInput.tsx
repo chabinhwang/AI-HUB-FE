@@ -141,22 +141,22 @@ export function ChatInput({
   };
 
   return (
-    <div className="absolute bottom-[17px] left-[21px] right-[21px]">
+    <div className="absolute bottom-2 sm:bottom-3 md:bottom-[17px] left-3 sm:left-4 md:left-[21px] right-3 sm:right-4 md:right-[21px]">
       {/* 이미지 미리보기 */}
       {pastedImage && (
-        <div className="mb-2 bg-[rgba(245,245,245,0.15)] rounded-[8px] border border-[#444648] p-2 relative inline-block">
+        <div className="mb-2 bg-[rgba(245,245,245,0.15)] rounded-[6px] sm:rounded-[8px] border border-[#444648] p-1.5 sm:p-2 relative inline-block">
           <img
             src={pastedImage}
             alt="Pasted"
-            className="max-h-[100px] max-w-[150px] rounded-[4px]"
+            className="max-h-[80px] sm:max-h-[100px] max-w-[120px] sm:max-w-[150px] rounded-[4px]"
           />
           {/* 제거 버튼 */}
           <button
             type="button"
             onClick={onRemoveImage}
-            className="absolute -top-2 -right-2 size-[20px] bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
+            className="absolute -top-1.5 -right-1.5 sm:-top-2 sm:-right-2 size-4 sm:size-[20px] bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors"
           >
-            <svg className="size-[12px]" fill="none" viewBox="0 0 12 12">
+            <svg className="size-2.5 sm:size-[12px]" fill="none" viewBox="0 0 12 12">
               <path d="M2 2L10 10M10 2L2 10" stroke="white" strokeWidth="2" strokeLinecap="round" />
             </svg>
           </button>
@@ -164,13 +164,13 @@ export function ChatInput({
       )}
 
       <form onSubmit={onSubmit}>
-        <div className="bg-[rgba(245,245,245,0.15)] rounded-[12px] border border-[#444648] relative">
+        <div className="bg-[rgba(245,245,245,0.15)] rounded-[8px] sm:rounded-[10px] md:rounded-[12px] border border-[#444648] relative">
           <textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onPaste={handlePaste}
             placeholder={isStreaming ? `AI가 응답 중입니다${dots}` : "궁금한 걸 입력해주세요..."}
-            className="w-full h-[87px] bg-transparent px-[10px] py-[15px] text-white font-['Pretendard:Regular',sans-serif] text-[15px] resize-none focus:outline-none placeholder:text-white disabled:opacity-50"
+            className="w-full min-h-[75px] sm:min-h-[80px] md:h-[87px] bg-transparent px-2 sm:px-3 md:px-[10px] py-2.5 sm:py-3 md:py-[15px] text-white font-['Pretendard:Regular',sans-serif] text-[15px] sm:text-[14px] md:text-[15px] resize-none focus:outline-none placeholder:text-white disabled:opacity-50"
             onKeyDown={handleKeyDown}
             disabled={isStreaming}
           />
@@ -189,7 +189,7 @@ export function ChatInput({
             type="button"
             onClick={handleAttachClick}
             disabled={isStreaming || isUploadingFile}
-            className="absolute left-[8px] bottom-[15px] size-[24px] hover:opacity-70 transition-opacity disabled:opacity-30"
+            className="absolute left-1.5 sm:left-2 md:left-[8px] bottom-2 sm:bottom-2.5 md:bottom-[15px] size-5 sm:size-[22px] md:size-[24px] hover:opacity-70 transition-opacity disabled:opacity-30"
             data-name="paperclip-02"
             title="파일 첨부"
           >
@@ -209,7 +209,7 @@ export function ChatInput({
           {/* Send button */}
           <button
             type="submit"
-            className="absolute right-[8px] bottom-[15px] size-[31px] hover:opacity-80 transition-opacity disabled:opacity-50"
+            className="absolute right-1.5 sm:right-2 md:right-[8px] bottom-2 sm:bottom-2.5 md:bottom-[15px] size-7 sm:size-[29px] md:size-[31px] hover:opacity-80 transition-opacity disabled:opacity-50"
             disabled={(!message.trim() && !pastedImage) || isStreaming || hasInsufficientBalance}
             title={hasInsufficientBalance ? "토큰이 부족합니다" : undefined}
           >
