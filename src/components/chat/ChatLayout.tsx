@@ -140,7 +140,13 @@ export function ChatLayout() {
       e.preventDefault();
 
       // 메시지가 없거나 스트리밍 중이면 전송하지 않음
-      if ((!message.trim() && !pastedImage) || isStreaming || isUploadingFile) {
+      if ((!message.trim() && !pastedImage) || isStreaming) {
+        return;
+      }
+
+      // 파일 업로드 중이면 전송하지 않음
+      if (isUploadingFile) {
+        setWarningMessage("이미지 업로드 중입니다. 잠시만 기다려주세요.");
         return;
       }
 

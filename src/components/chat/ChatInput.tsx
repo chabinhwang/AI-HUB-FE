@@ -58,7 +58,7 @@ export function ChatInput({
 
   // 파일 선택 처리 (이미지 형식만 허용)
   // onPasteImage를 통해 미리보기 + 즉시 업로드가 처리됨
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       // 이미지 형식 검증 (jpg, jpeg, png, webp만 허용)
@@ -73,11 +73,19 @@ export function ChatInput({
       // 파일을 base64로 변환 후 onPasteImage 호출 (미리보기 + 즉시 업로드)
       if (onPasteImage) {
         const reader = new FileReader();
-        reader.onload = (event) => {
-          const base64 = event.target?.result as string;
-          onPasteImage(base64);
-        };
-        reader.readAsDataURL(file);
+
+        // FileReader를 Promise로 감싸서 변환 완료 대기
+        const base64 = await new Promise<string>((resolve, reject) => {
+          reader.onload = (event) => {
+            const result = event.target?.result as string;
+            resolve(result);
+          };
+          reader.onerror = () => reject(new Error("파일 읽기 실패"));
+          reader.readAsDataURL(file);
+        });
+
+        // 업로드 완료까지 대기
+        await onPasteImage(base64);
       }
     }
     // input 초기화 (같은 파일 다시 선택 가능하도록)
@@ -113,11 +121,19 @@ export function ChatInput({
         if (blob && onPasteImage) {
           // Blob을 base64로 변환 후 onPasteImage 호출 (즉시 업로드됨)
           const reader = new FileReader();
-          reader.onload = (event) => {
-            const base64 = event.target?.result as string;
-            onPasteImage(base64);
-          };
-          reader.readAsDataURL(blob);
+
+          // FileReader를 Promise로 감싸서 변환 완료 대기
+          const base64 = await new Promise<string>((resolve, reject) => {
+            reader.onload = (event) => {
+              const result = event.target?.result as string;
+              resolve(result);
+            };
+            reader.onerror = () => reject(new Error("이미지 읽기 실패"));
+            reader.readAsDataURL(blob);
+          });
+
+          // 업로드 완료까지 대기
+          await onPasteImage(base64);
         }
         break;
       }
