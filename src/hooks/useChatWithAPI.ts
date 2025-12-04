@@ -181,7 +181,7 @@ export function useChatWithAPI(options: UseChatOptions) {
         await sendMessageWithStreaming(
           currentRoomId,
           {
-            message: msg,
+            message: msg.trim() || "[이미지]",
             modelId: currentModelId,
             fileId: fileIdToSend || undefined,
             previousResponseId,
